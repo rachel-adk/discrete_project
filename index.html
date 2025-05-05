@@ -75,10 +75,11 @@
       examplesEl.appendChild(li);
     });
 
-    if (combination(r - 1, k - 1) > 5) {
-      const li = document.createElement("li");
-      li.textContent = `...and more possible combinations.`;
-      examplesEl.appendChild(li);
+    if (combinations > 5) {
+    const note = document.createElement("li");
+    note.textContent = `...and ${combinations - 5} more possible combinations.`;
+    examplesElement.appendChild(li);
+
     }
   }
 </script>

@@ -6,7 +6,7 @@ body {
     color: #333;
   }
   
-  header, nav, footer, title {
+  header, nav, footer {
     background: #610c70;
     color: white;
     padding: 1rem;
