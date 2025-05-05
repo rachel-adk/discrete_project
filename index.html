@@ -20,52 +20,86 @@
     <p> Core concepts include permutations which involves the ordering of elements and combinations which is the selection of elements without regard to order.</p>
     <p>When it comes to resource distribution in various parts of the world, there is an issue of inequality based on bias, nepotism and other forms of injustice. This can be resolved through the equal distribution of resources in both rural and urban areas, and this can be done through combination</p>
     <p>In countries like Ghana, urban areas, especially Accra (the capital), are the economic hubs of Ghana, receiving the majority of investments, services, and opportunities. Rural areas often face higher poverty rates and lower access to infrastructure like roads, health facilities, and educational institutions.
-      According to the World Bank, more than 40% of Ghanaians in rural areas live below the poverty line compared to about 15% in urban areas. </p>
     <p>This affects their quality of life, education, health and even food resources.</p>
     <p>This can be resolved by creating an easy way of ensuring that each area receives a good amount of reources without any bias</p>
   </section>
 
   <h2>Resource Distribution Calculator (Combinations)</h2>
 
-  <label for="resources">Total Resources:</label>
-  <input type="number" id="resources" min="1"><br><br>
+<label for="resources">Total Resources:</label>
+<input type="number" id="resources" min="1"><br><br>
 
-  <label for="sectors">Number of Sectors:</label>
-  <input type="number" id="sectors" min="1"><br><br>
+<label for="sectors">Number of Sectors:</label>
+<input type="number" id="sectors" min="1"><br><br>
 
-  <button onclick="calculateCombinations()">Calculate Ways to Distribute</button>
+<button onclick="calculateCombinations()">Calculate Ways to Distribute</button>
 
-  <h3 id="result"></h3>
+<h3 id="result"></h3>
+<ul id="examples"></ul>
 
-  <script>
-    function factorial(n) {
-      if (n === 0 || n === 1) return 1;
-      let result = 1;
-      for (let i = 2; i <= n; i++) {
-        result *= i;
+<script>
+  function factorial(n) {
+    if (n === 0 || n === 1) return 1;
+    let result = 1;
+    for (let i = 2; i <= n; i++) {
+      result *= i;
+    }
+    return result;
+  }
+
+  function combination(n, k) {
+    if (k > n) return 0;
+    return factorial(n) / (factorial(k) * factorial(n - k));
+  }
+
+  // Helper: Generate integer partitions where each part >= 1
+  function generateDistributions(resources, sectors, current = [], result = [], start = 1) {
+    if (sectors === 1) {
+      if (resources >= start) {
+        result.push([...current, resources]);
       }
-      return result;
+      return;
     }
 
-    function combination(n, k) {
-      if (k > n) return 0;
-      return factorial(n) / (factorial(k) * factorial(n - k));
+    for (let i = start; i <= resources - sectors + 1; i++) {
+      generateDistributions(resources - i, sectors - 1, [...current, i], result, i);
+    }
+  }
+
+  function calculateCombinations() {
+    const r = parseInt(document.getElementById('resources').value);
+    const k = parseInt(document.getElementById('sectors').value);
+    const resultElement = document.getElementById('result');
+    const examplesElement = document.getElementById('examples');
+    examplesElement.innerHTML = '';
+
+    if (r < k) {
+      resultElement.textContent = "Each sector must get at least 1 resource. Total resources must be >= number of sectors.";
+      return;
     }
 
-    function calculateCombinations() {
-      const r = parseInt(document.getElementById('resources').value);
-      const k = parseInt(document.getElementById('sectors').value);
-      const resultElement = document.getElementById('result');
+    const combinations = combination(r - 1, k - 1);
+    resultElement.textContent = `There are ${combinations} ways to distribute ${r} resources to ${k} sectors.`;
 
-      if (r < k) {
-        resultElement.textContent = "Each sector must get at least 1 resource. Total resources must be >= number of sectors.";
-        return;
-      }
+    // Show a few sample distributions
+    const allDistributions = [];
+    generateDistributions(r, k, [], allDistributions);
 
-      const combinations = combination(r - 1, k - 1);
-      resultElement.textContent = `There are ${combinations} ways to distribute ${r} resources to ${k} sectors.`;
+    allDistributions.slice(0, 5).forEach(dist => {
+      const li = document.createElement("li");
+      li.textContent = dist.join(" | ");
+      examplesElement.appendChild(li);
+    });
+
+    if (allDistributions.length > 5) {
+      const note = document.createElement("li");
+      note.textContent = `...and ${allDistributions.length - 5} more possible combinations.`;
+      examplesElement.appendChild(note);
     }
-  </script>
+  }
+</script>
+
+    
 
   <section id="graph-theory" class="card">
     <h2>Understanding Graph Theory</h2>
