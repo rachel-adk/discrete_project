@@ -38,68 +38,51 @@
 <ul id="examples"></ul>
 
 <script>
-  function factorial(n) {
-    if (n === 0 || n === 1) return 1;
-    let result = 1;
-    for (let i = 2; i <= n; i++) {
-      result *= i;
+  const factorial = n => (n <= 1 ? 1 : n * factorial(n - 1));
+
+  const combination = (n, k) =>
+    k > n ? 0 : factorial(n) / (factorial(k) * factorial(n - k));
+
+  function generateDistributions(total, parts, current = [], result = []) {
+    if (parts === 1) {
+      result.push([...current, total]);
+      return result;
+    }
+    for (let i = 1; i <= total - parts + 1; i++) {
+      generateDistributions(total - i, parts - 1, [...current, i], result);
     }
     return result;
   }
 
-  function combination(n, k) {
-    if (k > n) return 0;
-    return factorial(n) / (factorial(k) * factorial(n - k));
-  }
-
-  // Helper: Generate integer partitions where each part >= 1
-  function generateDistributions(resources, sectors, current = [], result = [], start = 1) {
-    if (sectors === 1) {
-      if (resources >= start) {
-        result.push([...current, resources]);
-      }
-      return;
-    }
-
-    for (let i = start; i <= resources - sectors + 1; i++) {
-      generateDistributions(resources - i, sectors - 1, [...current, i], result, i);
-    }
-  }
-
   function calculateCombinations() {
-    const r = parseInt(document.getElementById('resources').value);
-    const k = parseInt(document.getElementById('sectors').value);
-    const resultElement = document.getElementById('result');
-    const examplesElement = document.getElementById('examples');
-    examplesElement.innerHTML = '';
+    const r = +document.getElementById('resources').value;
+    const k = +document.getElementById('sectors').value;
+    const resultEl = document.getElementById('result');
+    const examplesEl = document.getElementById('examples');
+    examplesEl.innerHTML = '';
 
     if (r < k) {
-      resultElement.textContent = "Each sector must get at least 1 resource. Total resources must be >= number of sectors.";
+      resultEl.textContent = "Total resources must be at least equal to number of sectors.";
       return;
     }
 
-    const combinations = combination(r - 1, k - 1);
-    resultElement.textContent = `There are ${combinations} ways to distribute ${r} resources to ${k} sectors.`;
+    resultEl.textContent = `There are ${combination(r - 1, k - 1)} ways to distribute ${r} resources among ${k} sectors.`;
 
-    // Show a few sample distributions
-    const allDistributions = [];
-    generateDistributions(r, k, [], allDistributions);
-
-    allDistributions.slice(0, 5).forEach(dist => {
+    const distributions = generateDistributions(r, k).slice(0, 5);
+    distributions.forEach(dist => {
       const li = document.createElement("li");
-      li.textContent = dist.join(" | ");
-      examplesElement.appendChild(li);
+      li.textContent = dist.map((val, i) => `Sector ${i + 1}: ${val}`).join(", ");
+      examplesEl.appendChild(li);
     });
 
-    if (allDistributions.length > 5) {
-      const note = document.createElement("li");
-      note.textContent = `...and ${allDistributions.length - 5} more possible combinations.`;
-      examplesElement.appendChild(note);
+    if (combination(r - 1, k - 1) > 5) {
+      const li = document.createElement("li");
+      li.textContent = `...and more possible combinations.`;
+      examplesEl.appendChild(li);
     }
   }
 </script>
 
-    
 
   <section id="graph-theory" class="card">
     <h2>Understanding Graph Theory</h2>
@@ -113,11 +96,6 @@
     </ul>
   </section>
 
- 
-
-  <footer>
-    <p>&copy; Maths 55 Combinatorics & Graph Theory Project</p>
-  </footer>
   
   <script src="script.js"></script>
 </body>
