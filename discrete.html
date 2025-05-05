@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Combinatorics & Graph Theory: Tools for Global Change</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <h1>Combinatorics & Graph Theory: Tools for Global Change</h1>
+  </header>
+
+  <nav>
+    <a href="#combinatorics">Combinatorics</a>
+    <a href="#graph-theory">Graph Theory</a>
+  </nav>
+
+  <section id="combinatorics" class="card">
+    <h2>What is Combinatorics?</h2>
+    <p>Combinatorics is the study of counting, arrangements, and combinations. It explores how elements can be grouped based on the availability of those elements and how they can be distributed based on particular constraints.  </p>
+    <p> Core concepts include permutations which involves the ordering of elements and combinations which is the selection of elements without regard to order.</p>
+    <p>When it comes to resource distribution in various parts of the world, there is an issue of inequality based on bias, nepotism and other forms of injustice. This can be resolved through the equal distribution of resources in both rural and urban areas, and this can be done through combination</p>
+    <p>In countries like Ghana, urban areas, especially Accra (the capital), are the economic hubs of Ghana, receiving the majority of investments, services, and opportunities. Rural areas often face higher poverty rates and lower access to infrastructure like roads, health facilities, and educational institutions.
+      According to the World Bank, more than 40% of Ghanaians in rural areas live below the poverty line compared to about 15% in urban areas. </p>
+    <p>This affects their quality of life, education, health and even food resources.</p>
+    <p>This can be resolved by creating an easy way of ensuring that each area receives a good amount of reources without any bias</p>
+  </section>
+
+  <h2>Resource Distribution Calculator (Combinations)</h2>
+
+  <label for="resources">Total Resources:</label>
+  <input type="number" id="resources" min="1"><br><br>
+
+  <label for="sectors">Number of Sectors:</label>
+  <input type="number" id="sectors" min="1"><br><br>
+
+  <button onclick="calculateCombinations()">Calculate Ways to Distribute</button>
+
+  <h3 id="result"></h3>
+
+  <script>
+    function factorial(n) {
+      if (n === 0 || n === 1) return 1;
+      let result = 1;
+      for (let i = 2; i <= n; i++) {
+        result *= i;
+      }
+      return result;
+    }
+
+    function combination(n, k) {
+      if (k > n) return 0;
+      return factorial(n) / (factorial(k) * factorial(n - k));
+    }
+
+    function calculateCombinations() {
+      const r = parseInt(document.getElementById('resources').value);
+      const k = parseInt(document.getElementById('sectors').value);
+      const resultElement = document.getElementById('result');
+
+      if (r < k) {
+        resultElement.textContent = "Each sector must get at least 1 resource. Total resources must be >= number of sectors.";
+        return;
+      }
+
+      const combinations = combination(r - 1, k - 1);
+      resultElement.textContent = `There are ${combinations} ways to distribute ${r} resources to ${k} sectors.`;
+    }
+  </script>
+
+  <section id="graph-theory" class="card">
+    <h2>Understanding Graph Theory</h2>
+    <p>Graph theory explores relationships using nodes and edges(paths between them). It helps model systems like transportation, pollution, and resource flow.</p>
+    <p>The distribution of reources can also be illustrared through graphs(bipartite graphs/find other grapjs that can illudtrate it)</p>
+    <p>A bipartite graph is a special kind of graph where the set of nodes can be divided into two distinct groups, and edges only connect nodes from different groups, never within the same group.</p>
+    <p>In the context of resource distribution, the two groups would be:</p>
+    <ul>
+      <li>Group 1: Resources — e.g., Water, Food, Medicine</li>
+      <li> Group 2: Regions — e.g., Region A, Region B, Region C</li>
+    </ul>
+  </section>
+
+ 
+
+  <footer>
+    <p>&copy; Maths 55 Combinatorics & Graph Theory Project</p>
+  </footer>
+  
+  <script src="script.js"></script>
+</body>
+</html>
