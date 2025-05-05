@@ -39,19 +39,92 @@
   </section>
 
   <h2>Stars and Bars Resource Distribution Calculator</h2>
-  <label for="resources">Total Resources (r):</label>
-  <input type="number" id="resources" min="0"><br><br>
+<label for="resources">Total Resources (r):</label>
+<input type="number" id="resources" min="0"><br><br>
 
-  <label for="sectors">Number of Sectors (k):</label>
-  <input type="number" id="sectors" min="1"><br><br>
+<label for="sectors">Number of Sectors (k):</label>
+<input type="number" id="sectors" min="1"><br><br>
 
-  <label>
-    <input type="checkbox" id="atLeastOne" checked>
-    Each sector must get at least 1 resource
-  </label><br><br>
+<label>
+  <input type="checkbox" id="atLeastOne" checked>
+  Each sector must get at least 1 resource
+</label><br><br>
 
-  <button onclick="calculateStarsAndBars()">Calculate</button>
-  <h3 id="result"></h3>
+<button onclick="calculateStarsAndBars()">Calculate</button>
+<h3 id="result"></h3>
+<div id="examples"></div>
+
+<script>
+  function factorial(n) {
+    if (n === 0 || n === 1) return 1;
+    let result = 1;
+    for (let i = 2; i <= n; i++) result *= i;
+    return result;
+  }
+
+  function combination(n, k) {
+    if (k > n) return 0;
+    return factorial(n) / (factorial(k) * factorial(n - k));
+  }
+
+  function calculateStarsAndBars() {
+    const r = parseInt(document.getElementById('resources').value);
+    const k = parseInt(document.getElementById('sectors').value);
+    const atLeastOne = document.getElementById('atLeastOne').checked;
+    const result = document.getElementById('result');
+    const examples = document.getElementById('examples');
+    examples.innerHTML = "";
+
+    if (isNaN(r) || isNaN(k) || k < 1) {
+      result.textContent = "Please enter valid resource and sector numbers.";
+      return;
+    }
+
+    if (atLeastOne) {
+      if (r < k) {
+        result.textContent = "Resources must be ≥ sectors when each sector gets at least 1.";
+        return;
+      }
+      const ways = combination(r - 1, k - 1);
+      result.textContent = `Ways to distribute: ${ways} (Each sector gets ≥ 1)`;
+      generateExamples(r, k, true);
+    } else {
+      const ways = combination(r + k - 1, k - 1);
+      result.textContent = `Ways to distribute: ${ways} (Sectors can get 0)`;
+      generateExamples(r, k, false);
+    }
+  }
+
+  function generateExamples(r, k, atLeastOne) {
+    const examples = document.getElementById('examples');
+    let output = '<h4>Sample Distributions:</h4><ul>';
+    let count = 0;
+
+    function helper(arr, remaining, index) {
+      if (index === k) {
+        if (remaining === 0) {
+          output += '<li>' + arr.join(', ') + '</li>';
+          count++;
+        }
+        return;
+      }
+
+      let start = atLeastOne ? 1 : 0;
+      for (let i = start; i <= remaining; i++) {
+        arr[index] = i;
+        helper(arr, remaining - i, index + 1);
+        if (count >= 5) return;
+      }
+    }
+
+    helper(Array(k).fill(0), r, 0);
+    if (count === 0) {
+      output += '<li>No valid distributions found (try adjusting the resource or sector numbers).</li>';
+    }
+    output += '</ul>';
+    examples.innerHTML = output;
+  }
+</script>
 
   <section id="graph-theory" class="card">
     <h2>Understanding Graph Theory</h2>
@@ -69,35 +142,6 @@
   <div id="network"></div>
 
   <script>
-    function factorial(n) {
-      if (n === 0 || n === 1) return 1;
-      let result = 1;
-      for (let i = 2; i <= n; i++) result *= i;
-      return result;
-    }
-
-    function combination(n, k) {
-      if (k > n) return 0;
-      return factorial(n) / (factorial(k) * factorial(n - k));
-    }
-
-    function calculateStarsAndBars() {
-      const r = parseInt(document.getElementById('resources').value);
-      const k = parseInt(document.getElementById('sectors').value);
-      const atLeastOne = document.getElementById('atLeastOne').checked;
-      const result = document.getElementById('result');
-
-      if (atLeastOne) {
-        if (r < k) {
-          result.textContent = "Resources must be ≥ sectors when each sector gets at least 1.";
-          return;
-        }
-        result.textContent = `Ways to distribute: ${combination(r - 1, k - 1)} (Each sector gets ≥ 1)`;
-      } else {
-        result.textContent = `Ways to distribute: ${combination(r + k - 1, k - 1)} (Sectors can get 0)`;
-      }
-    }
-
     const resources = [
       { id: 1, label: "Food", group: "resource" },
       { id: 2, label: "Water", group: "resource" },
@@ -111,12 +155,20 @@
     ];
 
     const edges = [
-      { from: 1, to: 4, label: "20 units" },
-      { from: 2, to: 4, label: "10 units" },
-      { from: 3, to: 5, label: "5 units" },
-      { from: 1, to: 6, label: "15 units" },
-      { from: 2, to: 5, label: "25 units" }
-    ];
+    { from: 1, to: 4, label: "10 units" },
+    { from: 1, to: 5, label: "10 units" },
+    { from: 1, to: 6, label: "10 units" },
+
+    { from: 2, to: 4, label: "10 units" },
+    { from: 2, to: 5, label: "10 units" },
+    { from: 2, to: 6, label: "10 units" },
+
+    { from: 3, to: 4, label: "10 units" },
+    { from: 3, to: 5, label: "10 units" },
+    { from: 3, to: 6, label: "10 units" },
+
+    
+  ];
 
     const nodes = new vis.DataSet([...resources, ...regions]);
     const data = {
