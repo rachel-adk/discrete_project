@@ -104,32 +104,64 @@
   
   <script src="script.js"></script>
 
-<h2>Resource Distribution Graph</h2>
-<div id="distribution-graph" style="height: 400px; border: 1px solid #ccc; margin-bottom: 20px;"></div>
-
-
-<script>
-  const nodes = new vis.DataSet([
-    { id: 1, label: "Water" },
-    { id: 2, label: "Food" },
-    { id: 3, label: "Medicine" },
-    { id: 4, label: "Region A" },
-    { id: 5, label: "Region B" },
-    { id: 6, label: "Region C" }
-  ]);
-
-  const edges = new vis.DataSet([
-    { from: 1, to: 4, label: "10" },
-    { from: 2, to: 5, label: "20" },
-    { from: 3, to: 6, label: "30" },
-    { from: 1, to: 5, label: "15" }
-  ]);
-
-  const container = document.getElementById("network");
-  const data = { nodes, edges };
-  const options = { edges: { arrows: "to" } };
-  new vis.Network(container, data, options);
-</script>
+  <h2>Resource Distribution Bipartite Graph</h2>
+  <div id="network"></div>
+  
+  <script>
+    // Resources (left set)
+    const resources = [
+      { id: 1, label: "Food", group: "resource" },
+      { id: 2, label: "Water", group: "resource" },
+      { id: 3, label: "Medicine", group: "resource" }
+    ];
+  
+    // Regions (right set)
+    const regions = [
+      { id: 4, label: "Region A", group: "region" },
+      { id: 5, label: "Region B", group: "region" },
+      { id: 6, label: "Region C", group: "region" }
+    ];
+  
+    // Edges (distribution links)
+    const edges = [
+      { from: 1, to: 4, label: "20 units" },
+      { from: 2, to: 4, label: "10 units" },
+      { from: 3, to: 5, label: "5 units" },
+      { from: 1, to: 6, label: "15 units" },
+      { from: 2, to: 5, label: "25 units" }
+    ];
+  
+    const nodes = new vis.DataSet([...resources, ...regions]);
+  
+    const data = {
+      nodes: nodes,
+      edges: new vis.DataSet(edges)
+    };
+  
+    const options = {
+      nodes: {
+        shape: "box",
+        font: { size: 16 }
+      },
+      edges: {
+        arrows: "to",
+        font: { align: "middle", size: 12 }
+      },
+      layout: {
+        hierarchical: {
+          direction: "LR", // Left to Right
+          sortMethod: "directed"
+        }
+      },
+      groups: {
+        resource: { color: { background: "#ffcc00" } },
+        region: { color: { background: "#66ccff" } }
+      }
+    };
+  
+    new vis.Network(document.getElementById("network"), data, options);
+  </script>
+  
 
 </body>
 </html>
