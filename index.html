@@ -18,7 +18,7 @@
   <section id="combinatorics" class="card">
     <h2>What is Combinatorics?</h2>
     <p>Combinatorics is the study of counting, arrangements, and combinations. It explores how elements can be grouped based on the availability of those elements and how they can be distributed based on particular constraints.  </p>
-    <p> Core concepts include permutations which involves the ordering of elements and combinations which is the selection of elements without regard to order.</p>
+    <p> The main concepts include permutations which involves the ordering of elements and combinations which is the selection of elements without regard to order.</p>
     <p>When it comes to resource distribution in various parts of the world, there is an issue of inequality based on bias, nepotism and other forms of injustice. This can be resolved through the equal distribution of resources in both rural and urban areas, and this can be done through combination</p>
     <p>In countries like Ghana, urban areas, especially Accra (the capital), are the economic hubs of Ghana, receiving the majority of investments, services, and opportunities. Rural areas often face higher poverty rates and lower access to infrastructure like roads, health facilities, and educational institutions.
     <p>This affects their quality of life, education, health and even food resources.</p>
@@ -101,5 +101,32 @@
 
   
   <script src="script.js"></script>
+
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<div id="network" style="height: 400px;"></div>
+
+<script>
+  const nodes = new vis.DataSet([
+    { id: 1, label: "Water" },
+    { id: 2, label: "Food" },
+    { id: 3, label: "Medicine" },
+    { id: 4, label: "Region A" },
+    { id: 5, label: "Region B" },
+    { id: 6, label: "Region C" }
+  ]);
+
+  const edges = new vis.DataSet([
+    { from: 1, to: 4, label: "10" },
+    { from: 2, to: 5, label: "20" },
+    { from: 3, to: 6, label: "30" },
+    { from: 1, to: 5, label: "15" }
+  ]);
+
+  const container = document.getElementById("network");
+  const data = { nodes, edges };
+  const options = { edges: { arrows: "to" } };
+  new vis.Network(container, data, options);
+</script>
+
 </body>
 </html>
