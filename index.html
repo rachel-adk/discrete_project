@@ -4,22 +4,21 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Combinatorics & Graph Theory: Resource Distribution</title>
- 
   <link rel="stylesheet" href="styles.css">
   <script src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
-
-</head>
-<body>
-  <div id="network"></div>
-
   <style>
     #network {
       width: 100%;
+      max-width: 900px;
       height: 500px;
+      margin: auto;
       border: 1px solid lightgray;
+      position: relative;
+      pointer-events: none; /* Prevent dragging */
     }
   </style>
-
+</head>
+<body>
   <h1>Combinatorics & Graph Theory: Resource Distribution</h1>
 
   <nav>
@@ -29,18 +28,17 @@
 
   <section id="combinatorics" class="card">
     <h2>What is Combinatorics?</h2>
-    <p>Combinatorics is the study of counting, arrangements, and combinations. It explores how elements can be grouped based on the availability of those elements and how they can be distributed based on particular constraints.  </p>
-    <p> The main concepts include permutations which involves the ordering of elements and combinations which is the selection of elements without regard to order.</p>
-    <p>When it comes to resource distribution in various parts of the world, there is an issue of inequality based on bias, nepotism and other forms of injustice. This can be resolved through the equal distribution of resources in both rural and urban areas, and this can be done through combination</p>
-    <p>In countries like Ghana, urban areas, especially Accra (the capital), are the economic hubs of Ghana, receiving the majority of investments, services, and opportunities. Rural areas often face higher poverty rates and lower access to infrastructure like roads, health facilities, and educational institutions.
+    <p>Combinatorics is the study of counting, arrangements, and combinations. It explores how elements can be grouped based on the availability of those elements and how they can be distributed based on particular constraints.</p>
+    <p>The main concepts include permutations which involve the ordering of elements and combinations which is the selection of elements without regard to order.</p>
+    <p>When it comes to resource distribution in various parts of the world, there is an issue of inequality based on bias, nepotism and other forms of injustice. This can be resolved through the equal distribution of resources in both rural and urban areas, and this can be done through combination.</p>
+    <p>In countries like Ghana, urban areas, especially Accra (the capital), are the economic hubs of Ghana, receiving the majority of investments, services, and opportunities. Rural areas often face higher poverty rates and lower access to infrastructure like roads, health facilities, and educational institutions.</p>
     <p>This affects their quality of life, education, health and even food resources.</p>
     <p>According to a researcher, Notably, 88.1% of young people identified the lack of financial resources as the top barrier to accessing education. Furthermore, the report highlighted that while 67.5% of youth expressed a desire to venture into self-employment, they are hindered by inadequate financial and social capital. The findings also underscored the disparities in educational opportunities, with youth in rural areas facing higher costs and fewer opportunities for quality education compared to their urban counterparts.</p>
-    <p>This can be resolved by creating an easy way of ensuring that each area receives a good amount of resources without any bias</p>
+    <p>This can be resolved by creating an easy way of ensuring that each area receives a good amount of resources without any bias.</p>
     <p>An example of finding ways to distribute resources based on the needs of each sector can be found below:</p>
   </section>
 
   <h2>Stars and Bars Resource Distribution Calculator</h2>
-
   <label for="resources">Total Resources (r):</label>
   <input type="number" id="resources" min="0"><br><br>
 
@@ -54,6 +52,21 @@
 
   <button onclick="calculateStarsAndBars()">Calculate</button>
   <h3 id="result"></h3>
+
+  <section id="graph-theory" class="card">
+    <h2>Understanding Graph Theory</h2>
+    <p>Graph theory explores relationships using nodes and edges (paths between them). It helps model systems like transportation, pollution, and resource flow.</p>
+    <p>The distribution of resources can also be illustrated through graphs (bipartite graphs).</p>
+    <p>A bipartite graph is a special kind of graph where the set of nodes can be divided into two distinct groups, and edges only connect nodes from different groups, never within the same group.</p>
+    <p>In the context of resource distribution, the two groups would be:</p>
+    <ul>
+      <li>Group 1: Resources — Water, Food, Medicine, etc</li>
+      <li>Group 2: Regions — Region A, Region B, Region C</li>
+    </ul>
+  </section>
+
+  <h2>Resource Distribution Bipartite Graph</h2>
+  <div id="network"></div>
 
   <script>
     function factorial(n) {
@@ -84,80 +97,61 @@
         result.textContent = `Ways to distribute: ${combination(r + k - 1, k - 1)} (Sectors can get 0)`;
       }
     }
-  </script>
 
+    const resources = [
+      { id: 1, label: "Food", group: "resource" },
+      { id: 2, label: "Water", group: "resource" },
+      { id: 3, label: "Medicine", group: "resource" }
+    ];
 
+    const regions = [
+      { id: 4, label: "Region A", group: "region" },
+      { id: 5, label: "Region B", group: "region" },
+      { id: 6, label: "Region C", group: "region" }
+    ];
 
-  <section id="graph-theory" class="card">
-    <h2>Understanding Graph Theory</h2>
-    <p>Graph theory explores relationships using nodes and edges(paths between them). It helps model systems like transportation, pollution, and resource flow.</p>
-    <p>The distribution of reources can also be illustrated through graphs(bipartite graphs)</p>
-    <p>A bipartite graph is a special kind of graph where the set of nodes can be divided into two distinct groups, and edges only connect nodes from different groups, never within the same group.</p>
-    <p>In the context of resource distribution, the two groups would be:</p>
-    <ul>
-      <li>Group 1: Resources — Water, Food, Medicine, etc</li>
-      <li> Group 2: Regions — Region A, Region B, Region C</li>
-    </ul>
-  </section>
+    const edges = [
+      { from: 1, to: 4, label: "20 units" },
+      { from: 2, to: 4, label: "10 units" },
+      { from: 3, to: 5, label: "5 units" },
+      { from: 1, to: 6, label: "15 units" },
+      { from: 2, to: 5, label: "25 units" }
+    ];
 
-  
-  <script src="script.js"></script>
+    const nodes = new vis.DataSet([...resources, ...regions]);
+    const data = {
+      nodes: nodes,
+      edges: new vis.DataSet(edges)
+    };
 
-  <h2>Resource Distribution Bipartite Graph</h2>
-<div id="network"></div>
-
-<script>
-  const resources = [
-    { id: 1, label: "Food", group: "resource" },
-    { id: 2, label: "Water", group: "resource" },
-    { id: 3, label: "Medicine", group: "resource" }
-  ];
-
-  const regions = [
-    { id: 4, label: "Region A", group: "region" },
-    { id: 5, label: "Region B", group: "region" },
-    { id: 6, label: "Region C", group: "region" }
-  ];
-
-  const edges = [
-    { from: 1, to: 4, label: "20 units" },
-    { from: 2, to: 4, label: "10 units" },
-    { from: 3, to: 5, label: "5 units" },
-    { from: 1, to: 6, label: "15 units" },
-    { from: 2, to: 5, label: "25 units" }
-  ];
-
-  const nodes = new vis.DataSet([...resources, ...regions]);
-  const data = {
-    nodes: nodes,
-    edges: new vis.DataSet(edges)
-  };
-
-  const options = {
-    nodes: {
-      shape: "box",
-      font: { size: 16 }
-    },
-    edges: {
-      arrows: "to",
-      font: { align: "middle", size: 12 }
-    },
-    layout: {
-      hierarchical: {
-        direction: "LR",
-        sortMethod: "directed"
+    const options = {
+      nodes: {
+        shape: "box",
+        font: { size: 16 }
+      },
+      edges: {
+        arrows: "to",
+        font: { align: "middle", size: 12 }
+      },
+      layout: {
+        hierarchical: {
+          direction: "LR",
+          sortMethod: "directed"
+        }
+      },
+      interaction: {
+        dragNodes: false,
+        dragView: false,
+        zoomView: false
+      },
+      physics: false,
+      groups: {
+        resource: { color: { background: "#ffcc00" } },
+        region: { color: { background: "#66ccff" } }
       }
-    },
-    groups: {
-      resource: { color: { background: "#ffcc00" } },
-      region: { color: { background: "#66ccff" } }
-    }
-  };
+    };
 
-  new vis.Network(document.getElementById("network"), data, options);
-</script>
-
-  
-
+    new vis.Network(document.getElementById("network"), data, options);
+  </script>
 </body>
 </html>
